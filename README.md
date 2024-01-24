@@ -1,18 +1,63 @@
-# Leuze ROS drivers
+# Leuze ROS2  drivers
 
-This stack contains all packages of the ROS driver for the Leuze RSL 400 laser scanners.   
+This stack contains all packages of the ROS2 driver for the Leuze RSL 400 laser scanners.   
+
 
 ## Installation (from source)
 
-Go to your catkin workspace:
+Activate the ROS2 Humble installation with:
 ```
-cd ~catkin_ws/src/   
-git clone https://gitlab.cc-asp.fraunhofer.de/ipa326/leuze_ros_drivers.git   
-cd ..   
-rosdep install --from-paths src --ignore-src -r -y   
-catkin build    
-source ~catkin_ws/devel/setup.bash   
+$ source /opt/ros/humble/setup.bash
 ```
+Note: You need to repeat this command for each new terminal.
+
+
+Navigate to the src subfolder of your colcon workspace:
+```
+$ cd ~ros2_ws/src/
+```
+
+Copy the complete source code of this driver into the current folder, for example by cloning it from github
+```
+$ git clone https://github.com/thesensorpeople/leuze_rsl_ros2_drivers.git
+```
+
+Navigate to the main workspace folder:
+```
+$ cd ..
+```
+
+Build the driver
+```
+$ colcon build --symlink-install
+```
+
+Next, you need to source this workspace so that ROS2 can see the new packages:
+```
+$ source install/local_setup.bash
+```
+
+
+Alternatively, you can build only the single packages required by your project, for example:
+```
+colcon build --symlink-install --packages-select leuze_msgs
+source install/local_setup.bash
+
+colcon build --symlink-install --packages-select leuze_rsl_driver
+source install/local_setup.bash
+
+colcon build --symlink-install --packages-select leuze_bringup
+source install/local_setup.bash
+```
+
+## Simulation mode
+You can activate the simulation mode for testing this driver without any connected real laser scanner by switching the option "SIMULATION" in leuze_rsl_driver/CMakeLists.txt from "no" to "yes":
+```
+#------------------SIMULATION---------------------------
+set(SIMULATION "yes")     #Set to "yes" for simulation mode (default value: "no")
+```
+
+In rviz, the simulated laser scanner will appear as dynamic sinusoidial contour within the defined topic name.
 
 
 ## Scanner Setup
@@ -69,17 +114,38 @@ rosdep install --from-paths src --ignore-src -r -y
 `leuze_rsl_driver` : Contains the main driver source code and its tests.   
 
 ## Bringup
-You can start the Leuze RSL ROS driver by running :   
+You can start the Leuze RSL ROS driver for RSL400 by running :   
 ```
-roslaunch leuze_bringup leuze_bringup.launch sensor_ip:=<sensor ip> port:=<port>
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
 ```
+
+By using different topic names, you can lauch multiple driver instances for multiple connected scanners at a time:
+
+Example:
+```
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
+```
+
 #### Parameters
 `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
-`port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.   
+`port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
+`topic`: The topic name under which the driver appears in the Rviz tool 
 
 > For more information on how to setup the IP and Port values of the scanner using Sensor Studio, see section *Scanner Setup*.   
 
-You can then view the scan profile by running :   
-```
-roslaunch leuze_urdf view_rsl400.launch
-```   
+Further parameters are defined in the corresponding .YAML files:
+
+leuze_bringup/config/params_rsl400.yaml
+
+These additional parameters are:
+    `scan_size`:  Number of beams in a single scann
+    `angle_min`:  Lowest possible angle: -135° (-3*pi/4 rad)
+    `angle_max`:  Highest possible angle: +135° (+3*pi/4 rad)
+    `scan_time`:  Period of the laser scanner
+    `range_min`:  Minumum measurable distance
+    `range_max`:  Maxumum measurable distance
+    `scan_frame`: Laser scan frame ID for further transformations
+
+*Note*
+If you only want rviz to visualize the measured contour without defining any additional transformation, you must set the Fixed_frame property in rviz to the exact name of the Laser scan frame ID (scan_frame) defined above.
