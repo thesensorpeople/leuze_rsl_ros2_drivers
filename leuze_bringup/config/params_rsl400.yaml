@@ -1,0 +1,11 @@
+# Values to be expected from the laser. If they do not match, they will be adjusted internally.
+# This serves as a quick check for the user.
+leuze_driver:
+  ros__parameters:
+    scan_size: 2700
+    angle_min: -2.35619449 #Note: This is equal to rad(-3*pi/4), we use this value, because we cannot enter an arithmetic expression in YAML
+    angle_max: 2.35619449  #Note: This is equal to rad(3*pi/4), we use this value, because we cannot enter an arithmetic expression in YAML
+    scan_time: 0.04
+    range_min: 0.001
+    range_max: 65.0
+    scan_frame: "scanner_laser"

@@ -8,6 +8,6 @@
       <arg name="port" value="$(arg port)" />
     </include>
 
-    <include file="$(find leuze_bringup)/launch/leuze_phidget_driver.launch"/>
+    <!-- <include file="$(find leuze_bringup)/launch/leuze_phidget_driver.launch"/> -->
 
 </launch>

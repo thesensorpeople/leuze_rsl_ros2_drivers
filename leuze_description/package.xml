@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<package format="2">
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>leuze_description</name>
   <version>1.0.1</version>
   <description>This package contains . </description>
@@ -7,18 +8,25 @@
   <author email="ludovic.delval@ipa.fraunhofer.de">Ludovic Delval</author>
   <author email="harshavardhan.deshpande@ipa.fraunhofer.de">Harshavardhan Deshpande</author>
   <author email="tejas.kumar.shastha@ipa.fraunhofer.de">Tejas Kumar Shastha</author>
-  <maintainer email="ludovic.delval@ipa.fraunhofer.de">Ludovic Delval</maintainer>
+  <author email="milan.mraz@leuze.com">Milan Mraz</author>
+  <maintainer email="milan.mraz@leuze.com">Milan Mraz</maintainer>
 
   <license>APACHE2.0</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <test_depend>roslaunch</test_depend>
+  <!-- Use CMAKE to build this package -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Dependencies used when running the code -->
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rviz</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
 
-  <export>
+  <!-- Dependencies used for code verification -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
+  <export>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
