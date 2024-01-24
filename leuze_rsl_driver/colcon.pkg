@@ -1,0 +1,9 @@
+{
+    # colcon.pkg is used to control the build order of single packages in the workspace, so that dependencies are built first
+    "name": "leuze_rsl_driver",
+    "type": "cmake",
+    "dependencies":[
+        "leuze_msgs"
+    ],
+    "hooks": ["share/leuze_rsl_driver/local_setup.sh"]
+}

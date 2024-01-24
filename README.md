@@ -14,14 +14,6 @@ catkin build
 source ~catkin_ws/devel/setup.bash   
 ```
 
-## Installation (from deb -- (Not Available yet) --)
-You can install this driver stack directly through it's binary distribution :   
-```
-sudo apt install ros-<distro>-leuze-ros-drivers
-```      
-where `distro` is your distribution of ROS. The driver has been successfully tested with ROS *Kinetic* and *Melodic*.   
-
-Until the Debian package is released via the ROS Build-farm, you can install it from source as mentioned above.
 
 ## Scanner Setup
 

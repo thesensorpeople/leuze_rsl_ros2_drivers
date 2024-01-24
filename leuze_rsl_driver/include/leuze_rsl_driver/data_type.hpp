@@ -39,7 +39,7 @@ struct Frame
   uint32_t scan_number;
 };
 
-struct DatagramExtendedStatusProfile
+struct DatagramExtendedStatusProfile_rsl400
 {
   struct StatusProfile
   {
@@ -86,7 +86,8 @@ struct DatagramExtendedStatusProfile
   }
 };
 
-// Assuming variable length datagrams, length to be determined runtime
+
+// Assuming variable length datagrams, length to be determined at runtime
 
 struct DatagramMeasurementDataType
 {

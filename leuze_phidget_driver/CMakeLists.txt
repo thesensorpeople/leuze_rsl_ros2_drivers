@@ -1,30 +1,48 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(leuze_phidget_driver)
 
-add_compile_options(-std=c++14)
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  leuze_msgs
-  std_msgs
-)
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
-find_package(Boost REQUIRED)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+
+# find dependencies
+find_package(Boost COMPONENTS thread REQUIRED)
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(leuze_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+
 
 include_directories(include
-  ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDES}
-)
-
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp leuze_msgs std_msgs
 )
 
 add_executable(leuze_phidget_driver_node src/leuze_phidget_driver_node.cpp
                                          src/leuze_phidget_driver.cpp)
-target_link_libraries(leuze_phidget_driver_node ${catkin_LIBRARIES})
-add_dependencies(leuze_phidget_driver_node ${catkin_EXPORTED_TARGETS})
+ament_target_dependencies(leuze_phidget_driver_node rclcpp)
 
-install(TARGETS leuze_phidget_driver_node RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-install(DIRECTORY include/ DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION})
+ament_target_dependencies(leuze_phidget_driver_node
+                            rclcpp
+                            leuze_msgs
+                          )
+
+install(
+  TARGETS
+    leuze_phidget_driver_node
+  DESTINATION 
+    lib/${PROJECT_NAME}
+)
+
+ament_package()
