@@ -25,6 +25,11 @@
   <!-- Dependencies used for code verification -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>leuze_bringup</test_depend>
+  <test_depend>leuze_description</test_depend>
+  <test_depend>leuze_msgs</test_depend>
+  <test_depend>leuze_rsl_driver</test_depend>
+  <test_depend>leuze_phidget_driver</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

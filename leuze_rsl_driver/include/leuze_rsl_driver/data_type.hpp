@@ -1,19 +1,25 @@
-#ifndef LEUZE_DATA_TYPE_H
-#define LEUZE_DATA_TYPE_H
+// Copyright 2019 Fraunhofer Institute for Manufacturing Engineering and Automation (IPA)
+// Copyright 2019 Leuze electronic GmbH + Co. KG
+// Licensed under the Apache License, Version 2.0
+
+#ifndef LEUZE_RSL_DRIVER__DATA_TYPE_HPP_
+#define LEUZE_RSL_DRIVER__DATA_TYPE_HPP_
 
 #include <cstdio>
+#include <vector>
 
 struct PacketHeader
 {
-    virtual std::size_t get_header_size() = 0;
-    virtual std::size_t get_packet_size() = 0;
+  virtual std::size_t get_header_size() = 0;
+  virtual std::size_t get_packet_size() = 0;
 };
 
 
 struct Frame
-    /** The logical organisation of the structs is based on the UDP Specification   (available in the leuze website)
-     *  Frame includes 2 header and 3 other information fields
-     */
+/** The logical organisation of the structs is based on the UDP Specification
+ *  (available in the leuze website)
+ *  Frame includes 2 header and 3 other information fields
+ */
 
 {
   struct Header1
@@ -57,7 +63,9 @@ struct DatagramExtendedStatusProfile_rsl400
     uint8_t fp_sel_a_byte_14;
     uint8_t indic_a_15;
     uint8_t protec_func_b_16;
-//    uint16_t fp_sel_b;    // Using one 16t instead of two 8ts causes a problem in that the next bytes are not properly read (start,stop and interval). Need to figure out why
+//    uint16_t fp_sel_b;
+// Using one 16t instead of two 8ts causes a problem in that the next bytes are not properly read
+// (start,stop and interval).
     uint8_t fp_sel_b_byte_17;
     uint8_t fp_sel_b_byte_18;
     uint8_t indic_b_19;
@@ -78,11 +86,13 @@ struct DatagramExtendedStatusProfile_rsl400
 
   int getBeamCount()
   {
-    return (1 + (int)ceil(
-              (measurement_contour_descritption.stop_index - measurement_contour_descritption.start_index)
-              /(double)measurement_contour_descritption.index_interval)
-            );
-    //As per the formula from UDP spec sheet pg 13 below table 3.4 as well as the expression used in udpstateimage.h_ex line 102
+    return 1 + static_cast<int>(ceil(
+             (measurement_contour_descritption.stop_index -
+             measurement_contour_descritption.start_index) /
+             static_cast<double>(measurement_contour_descritption.index_interval))
+    );
+    // As per the formula from UDP spec sheet pg 13 below table 3.4 as well as the expression used
+    // in udpstateimage.h_ex line 102
   }
 };
 
@@ -91,12 +101,10 @@ struct DatagramExtendedStatusProfile_rsl400
 
 struct DatagramMeasurementDataType
 {
-  Frame *frame;
+  Frame * frame;
   std::vector<uint16_t> data_distance;
   std::vector<uint16_t> data_signal_strength;
 };
 
 
-
-
-#endif
+#endif  // LEUZE_RSL_DRIVER__DATA_TYPE_HPP_

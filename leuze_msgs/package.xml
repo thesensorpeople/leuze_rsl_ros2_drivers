@@ -5,10 +5,11 @@
   <version>1.0.1</version>
   <description>Contains the specific leuze messages. </description>
 
+  <!-- The element "author" is not expected by xmllint:
   <author email="ludovic.delval@ipa.fraunhofer.de">Ludovic Delval</author>
   <author email="harshavardhan.deshpande@ipa.fraunhofer.de">Harshavardhan Deshpande</author>
   <author email="tejas.kumar.shastha@ipa.fraunhofer.de">Tejas Kumar Shastha</author>
-  <author email="milan.mraz@leuze.com">Milan Mraz</author>
+  <author email="milan.mraz@leuze.com">Milan Mraz</author> -->
   <maintainer email="milan.mraz@leuze.com">Milan Mraz</maintainer>
 
   <license>APACHE2.0</license>
@@ -19,13 +20,14 @@
   <!-- Dependencies used when building the code -->
   <build_depend>rosidl_default_generators</build_depend>
 
-  <!-- Dependencies used when running the code -->
-  <exec_depend>rosidl_default_runtime</exec_depend>
-  <member_of_group>rosidl_interface_packages</member_of_group>
-
   <!-- Dependencies used for code verification -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>rosidl_default_runtime</test_depend>
+
+  <!-- Dependencies used when running the code -->
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
 
   <export>
     <build_type>ament_cmake</build_type>
