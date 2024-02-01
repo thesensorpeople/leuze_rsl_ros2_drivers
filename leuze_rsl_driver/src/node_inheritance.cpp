@@ -1,31 +1,25 @@
+// Copyright 2019 Fraunhofer Institute for Manufacturing Engineering and Automation (IPA)
+// Copyright 2019 Leuze electronic GmbH + Co. KG
+// Licensed under the Apache License, Version 2.0
+
 #include "rclcpp/rclcpp.hpp"
 
-class Sth {
-private:
-  std::string name_;
-
-public:
-  Sth(std::string name){
-    name_ = name;
-  }
-};
-
-class MyNode : public rclcpp::Node, Sth
+class MyNode : public rclcpp::Node
 {
 public:
-  MyNode(std::string name) : Node("my_node"), Sth(name)
+  explicit MyNode(std::string name) : Node(name)
   {
-    // Constructor logic here
+    // No action needed here
   }
 };
 
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
-  
+
   auto node = std::make_shared<MyNode>("test");
   rclcpp::spin(node);
-  
+
   rclcpp::shutdown();
   return 0;
 }

@@ -5,10 +5,11 @@
   <version>1.0.1</version>
   <description>This package contains . </description>
 
+  <!-- The element "author" is not expected by xmllint:
   <author email="ludovic.delval@ipa.fraunhofer.de">Ludovic Delval</author>
   <author email="harshavardhan.deshpande@ipa.fraunhofer.de">Harshavardhan Deshpande</author>
   <author email="tejas.kumar.shastha@ipa.fraunhofer.de">Tejas Kumar Shastha</author>
-  <author email="milan.mraz@leuze.com">Milan Mraz</author>
+  <author email="milan.mraz@leuze.com">Milan Mraz</author> -->
   <maintainer email="milan.mraz@leuze.com">Milan Mraz</maintainer>
 
   <license>APACHE2.0</license>
@@ -18,6 +19,8 @@
 
   <!-- Dependencies used when running the code -->
   <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <!-- <exec_depend>joint_state_publisher_gui</exec_depend> -->
   <exec_depend>rviz</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
@@ -25,6 +28,10 @@
   <!-- Dependencies used for code verification -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>robot_state_publisher</test_depend>
+  <test_depend>rviz</test_depend>
+  <test_depend>urdf</test_depend>
+  <test_depend>xacro</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

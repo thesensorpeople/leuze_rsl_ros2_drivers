@@ -1,6 +1,6 @@
-# Leuze ROS2  drivers
+# Leuze ROS2 drivers
 
-This stack contains all packages of the ROS2 driver for the Leuze RSL 400 laser scanners.   
+This stack contains all packages of the ROS2 driver for the Leuze RSL 400 laser scanners.
 
 
 ## Installation (from source)
@@ -25,6 +25,11 @@ $ git clone https://github.com/thesensorpeople/leuze_rsl_ros2_drivers.git
 Navigate to the main workspace folder:
 ```
 $ cd ..
+```
+
+Install all ROS2 dependencies with rosdep:
+```
+rosdep install --from-paths src --ignore-src -r -y
 ```
 
 Build the driver
@@ -91,9 +96,9 @@ Once these settings have been updated, they need to be written to the device. Yo
 
 Once the IPs have been setup correctly on the scanner, setting up the receiving device is relatively straightforward. You only need to create a new Wired connection with a desired name. The IPv4 address should be the IP address you entered in *Settings>Data telegrams>IP address* in Sensor Studio, the default value assumed by this driver stack is `192.168.10.2`. The subnet mask would then similarly be `255.255.255.0` as previously setup in *Settings>Communication>LAN*.
 
-## Requirements
+## Phidget driver (obsolete - will be removed in future versions)
 
-This driver stack requires the Phidget Interface Kit drivers in order to interface with the I/Os of the scanner. It can be found [here](https://github.com/ros-drivers/phidgets_drivers). If you wish to utilize this feature, either install the Phidget driver from source by cloning it to the same workspace and building it, or install it directly as a Debian binary package:   
+This driver stack contains a Phidget driver in order to interface with the I/Os of the scanner. A required Phidget Interface Kit can be found [here](https://github.com/ros-drivers/phidgets_drivers). If you wish to utilize this feature, either install the Phidget driver from source by cloning it to the same workspace and building it, or install it directly as a Debian binary package:   
 
 ```
 sudo apt install ros-<distro>-phidgets-ik
@@ -106,15 +111,15 @@ rosdep install --from-paths src --ignore-src -r -y
 ```    
 
 ## Packages description
-`leuze_bringup` : Contains the launch files for starting the ROS driver, main point of entry to this stack.   
-`leuze_description` : Contains the URDF of the scanner and the launch file for independently viewing it.   
-`leuze_msgs` : Contains all the custom messages required for internal functionality.  
-`leuze_phidget_driver` : Contains the Phidget IK driver package to read the I/Os of the scanner.   
-`leuze_ros_drivers` : Metapackage of this stack.   
-`leuze_rsl_driver` : Contains the main driver source code and its tests.   
+- `leuze_bringup` : Contains the launch files for starting the ROS driver, main point of entry to this stack.   
+- `leuze_description` : Contains the URDF of the scanner and the launch file for independently viewing it.   
+- `leuze_msgs` : Contains all the custom messages required for internal functionality.  
+- `leuze_phidget_driver` : Contains the Phidget IK driver package to read the I/Os of the scanner.   
+- `leuze_ros_drivers` : Metapackage of this stack.   
+- `leuze_rsl_driver` : Contains the main driver source code and its tests.   
 
 ## Bringup
-You can start the Leuze RSL ROS driver for RSL400 by running :   
+You can start the Leuze RSL ROS driver for RSL400 by running :
 ```
 ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
 ```
@@ -128,11 +133,11 @@ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7
 ```
 
 #### Parameters
-`sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
-`port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
-`topic`: The topic name under which the driver appears in the Rviz tool 
+ - `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
+- `port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
+- `topic`: The topic name under which the driver appears in the Rviz tool 
 
-> For more information on how to setup the IP and Port values of the scanner using Sensor Studio, see section *Scanner Setup*.   
+> For more information on how to setup the IP and Port values of the scanner using Sensor Studio, see section *Scanner Setup*. 
 
 Further parameters are defined in the corresponding .YAML files:
 
@@ -149,3 +154,16 @@ These additional parameters are:
 
 *Note*
 If you only want rviz to visualize the measured contour without defining any additional transformation, you must set the Fixed_frame property in rviz to the exact name of the Laser scan frame ID (scan_frame) defined above.
+
+You can view the scan profile by running :   
+```
+ros2 launch leuze_description view_rsl400.launch.py
+```
+
+
+## Unit test and code verification
+Use colcon to perform code verification (cpplint, uncrustify) and to run unit tests:
+```
+colcon test
+colcon test-result --all
+```
