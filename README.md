@@ -45,14 +45,14 @@ $ source install/local_setup.bash
 
 Alternatively, you can build only the single packages required by your project, for example:
 ```
-colcon build --symlink-install --packages-select leuze_msgs
-source install/local_setup.bash
+$ colcon build --symlink-install --packages-select leuze_msgs
+$ source install/local_setup.bash
 
-colcon build --symlink-install --packages-select leuze_rsl_driver
-source install/local_setup.bash
+$ colcon build --symlink-install --packages-select leuze_rsl_driver
+$ source install/local_setup.bash
 
-colcon build --symlink-install --packages-select leuze_bringup
-source install/local_setup.bash
+$ colcon build --symlink-install --packages-select leuze_bringup
+$ source install/local_setup.bash
 ```
 
 ## Simulation mode
@@ -62,7 +62,8 @@ You can activate the simulation mode for testing this driver without any connect
 set(SIMULATION "yes")     #Set to "yes" for simulation mode (default value: "no")
 ```
 
-In rviz, the simulated laser scanner will appear as dynamic sinusoidial contour within the defined topic name.
+In RViz, the simulated laser scanner will appear as dynamic sinusoidial contour within the defined topic name:
+![RViz2_RSL400_simulation](leuze_description/doc/RViz2_RSL400_simulation.PNG?raw=true "RViz2_RSL400_simulation")
 
 
 ## Scanner Setup
@@ -121,21 +122,21 @@ rosdep install --from-paths src --ignore-src -r -y
 ## Bringup
 You can start the Leuze RSL ROS driver for RSL400 by running :
 ```
-ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
+$ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
 ```
 
 By using different topic names, you can lauch multiple driver instances for multiple connected scanners at a time:
 
 Example:
 ```
-ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
-ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
+$ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
+$ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
 ```
 
 #### Parameters
  - `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
 - `port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
-- `topic`: The topic name under which the driver appears in the Rviz tool 
+- `topic`: The topic name under which the driver appears in the RViz tool 
 
 > For more information on how to setup the IP and Port values of the scanner using Sensor Studio, see section *Scanner Setup*. 
 
@@ -153,11 +154,16 @@ These additional parameters are:
     `scan_frame`: Laser scan frame ID for further transformations
 
 *Note*
-If you only want rviz to visualize the measured contour without defining any additional transformation, you must set the Fixed_frame property in rviz to the exact name of the Laser scan frame ID (scan_frame) defined above.
+If you only want RViz to visualize the measured contour without defining any additional transformation, you must set the Fixed_frame property in RViz to the exact name of the Laser scan frame ID (scan_frame) defined above.
+
+You can Rviz to see the the scanner contour. You'll need to select the scanner by its topic (e.g. "/scan") and set the Fixed Frame parameter to "scanner_laser":   
+```
+$ rviz2
+```
 
 You can view the scan profile by running :   
 ```
-ros2 launch leuze_description view_rsl400.launch.py
+$ ros2 launch leuze_description view_rsl400.launch.py
 ```
 
 
