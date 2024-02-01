@@ -14,17 +14,26 @@ RSL400Interface::RSL400Interface(std::string address, std::string port, std::str
   pub_status_ = this->create_publisher<ExtendedStatusProfileMsg>("status", 50);
   configuration_received_ = false;
 
+  // Get param scan_frame
   this->declare_parameter("scan_frame", rclcpp::PARAMETER_STRING);
-  // The following is a parameter with a defaut value,
-  // so we must specify the value instead of rclcpp::PARAMETER_BOOL
+  std::string scan_frame = "scanner_laser";  // Default value
+  if (!this->has_parameter("scan_frame")) {
+    scan_frame = this->get_parameter("scan_frame").as_string();
+  }
+
+  // Get param ls_debug
   this->declare_parameter("ls_debug", "false");
-  this->declare_parameter("scan_size", rclcpp::PARAMETER_INTEGER);
-
-  scan_size_ = this->get_parameter("scan_size").as_int();  // [RSL400: 2700]
-  scan_data_.resize(scan_size_);
-
-  auto scan_frame = this->get_parameter("scan_frame").as_string();
   auto ls_debug = this->get_parameter("ls_debug").as_string() == "true" ? true : false;
+
+  // Get param scan_size
+  this->declare_parameter("scan_size", rclcpp::PARAMETER_INTEGER);
+  try {
+    scan_size_ = this->get_parameter("scan_size").as_int();
+  } catch (const std::exception & e) {
+    scan_size_ = 2700;  // Default value
+  }
+
+  scan_data_.resize(scan_size_);
 
   RCLCPP_INFO(get_logger(), "scan_frame: %s", scan_frame.c_str());
   RCLCPP_INFO(get_logger(), "ls_debug: %s", ls_debug == true ? "true" : "false");
@@ -64,11 +73,40 @@ void RSL400Interface::resetDefault()
   this->declare_parameter("range_min", rclcpp::PARAMETER_DOUBLE);  // 0.001; Default
   this->declare_parameter("range_max", rclcpp::PARAMETER_DOUBLE);  // 65.0; Max range 65m
 
-  auto angle_min = this->get_parameter("angle_min").as_double();
-  auto angle_max = this->get_parameter("angle_max").as_double();
-  auto scan_time = this->get_parameter("scan_time").as_double();
-  auto range_min = this->get_parameter("range_min").as_double();
-  auto range_max = this->get_parameter("range_max").as_double();
+  double angle_min;
+  try {
+    angle_min = this->get_parameter("angle_min").as_double();
+  } catch (const std::exception & e) {
+    angle_min = -2.35619449;  // Default value
+  }
+
+  double angle_max;
+  try {
+    angle_max = this->get_parameter("angle_max").as_double();
+  } catch (const std::exception & e) {
+    angle_max = 2.35619449;  // Default value
+  }
+
+  double scan_time;
+  try {
+    scan_time = this->get_parameter("scan_time").as_double();
+  } catch (const std::exception & e) {
+    scan_time = 0.04;  // Default value
+  }
+
+  double range_min;
+  try {
+    range_min = this->get_parameter("range_min").as_double();
+  } catch (const std::exception & e) {
+    range_min = 0.001;  // Default value
+  }
+
+  double range_max;
+  try {
+    range_max = this->get_parameter("range_max").as_double();
+  } catch (const std::exception & e) {
+    range_max = 65.0;  // Default value
+  }
 
   RCLCPP_INFO(get_logger(), "angle_min: %f", angle_min);
   RCLCPP_INFO(get_logger(), "angle_max: %f", angle_max);
@@ -116,7 +154,8 @@ int RSL400Interface::parseBuffer(std::basic_string<unsigned char> buffer)
   // We must extract the lowest 8 bits of the 16-bit ID, becuase the highest 8 bits are reserved
   uint8_t frame_type_id = static_cast<uint8_t>(frame->id);
 
-  if (frame_type_id == 1) {  // Extended status profile. Status profile + measurement contour descritpion. Pg8 3.3.1.
+  if (frame_type_id == 1) {
+    // Extended status profile. Status profile + measurement contour descritpion. Pg8 3.3.1.
     parseExtendedStatusProfile(buffer);
   } else if ( (frame_type_id == 3) || (frame_type_id == 6) ) {
     if (configuration_received_ == false) {

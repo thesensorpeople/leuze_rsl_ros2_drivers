@@ -134,7 +134,7 @@ $ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20
 ```
 
 #### Parameters
- - `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
+- `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
 - `port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
 - `topic`: The topic name under which the driver appears in the RViz tool 
 
