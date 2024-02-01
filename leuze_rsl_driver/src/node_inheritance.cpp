@@ -7,13 +7,14 @@
 class MyNode : public rclcpp::Node
 {
 public:
-  explicit MyNode(std::string name) : Node(name)
+  explicit MyNode(std::string name)
+  : Node(name)
   {
     // No action needed here
   }
 };
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 

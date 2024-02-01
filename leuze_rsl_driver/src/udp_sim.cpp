@@ -12,8 +12,7 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
 
   uint32_t scan_number = 0;
 
-  while (true)
-  {
+  while (true) {
 #if defined (RSL400)
 
     // State image (Frame 0 - first frame)
@@ -26,7 +25,7 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
       0x00, 0x00,              // Block number
       // Scan number 0. - 3. byte:
       static_cast<unsigned char>(scan_number & 0xFF),
-      static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 8)  & 0xFF),
+      static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 8) & 0xFF),
       static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 16) & 0xFF),
       static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 24) & 0xFF),
       // Status profile:
@@ -41,14 +40,12 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
     handle_read(test_buffer);
 
     // Meas data (Frames 1 to 8)
-    for (unsigned char meas_frame_counter = 0; meas_frame_counter < 8; meas_frame_counter++)
-    {
+    for (unsigned char meas_frame_counter = 0; meas_frame_counter < 8; meas_frame_counter++) {
       test_buffer.clear();
 
       // Calculate number of beams in this frame:
       uint16_t beam_cout = 720;  // Maximum number of beams in a full frame
-      if (meas_frame_counter == 7)
-      {
+      if (meas_frame_counter == 7) {
         // This is the last beam which contains fewer beams:
         beam_cout = 360;
       }
@@ -56,7 +53,7 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
       // Calculate total frame size
       // We must multiply the beams by 2 because each beam takes up 2 bytes;
       // 20 ist the size of the header, example: 1460 for a full frame
-      uint16_t frame_size = beam_cout*2 + 20;
+      uint16_t frame_size = beam_cout * 2 + 20;
 
       // Fill header
       test_buffer = {
@@ -69,7 +66,7 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
         meas_frame_counter, 0x00,      // Block number
         // Scan number 0. - 3. byte:
         static_cast<unsigned char>(scan_number & 0xFF),
-        static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 8)  & 0xFF),
+        static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 8) & 0xFF),
         static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 16) & 0xFF),
         static_cast<unsigned char>(static_cast<unsigned char>(scan_number >> 24) & 0xFF),
       };
@@ -77,12 +74,11 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
       test_buffer.resize(frame_size);
 
       // cast the buffer from 8-bit array into a 16-bit array, skip the header:
-      uint16_t* test_buffer_as_shorts = reinterpret_cast<uint16_t*>(&test_buffer[20]);
+      uint16_t * test_buffer_as_shorts = reinterpret_cast<uint16_t *>(&test_buffer[20]);
 
       // Fill meas data with a simulation pattern:
-      for (int i = 0; i < beam_cout; i++)
-      {
-        test_buffer_as_shorts[i] = 1000 + static_cast<int16_t>(100*sin(i + scan_number));
+      for (int i = 0; i < beam_cout; i++) {
+        test_buffer_as_shorts[i] = 1000 + static_cast<int16_t>(100 * sin(i + scan_number));
       }
       handle_read(test_buffer);
     }
@@ -97,4 +93,3 @@ void UdpSim::data_generator(boost::function<void(std::basic_string<unsigned char
     scan_number++;
   }
 }
-

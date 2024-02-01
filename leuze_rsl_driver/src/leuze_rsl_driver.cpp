@@ -6,11 +6,11 @@
 
 #include "leuze_rsl_driver/rsl400_interface.hpp"
 
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv)
+{
   rclcpp::init(argc, argv);
 
-  if (argc < 3)
-  {
+  if (argc < 3) {
     std::cerr << "Not enough arguments!" << std::endl;
   }
   std::string address = argv[1];
