@@ -351,12 +351,12 @@ void RSL400Interface::publishScan()
 void RSL400Interface::verifyConfiguration(DatagramExtendedStatusProfile_rsl400 d_esp)
 {
   float min_angle_from_esp =
-    static_cast<float>((d_esp.measurement_contour_descritption.start_index) / 10);
+    (static_cast<float>(d_esp.measurement_contour_descritption.start_index) / 10);
 
   // +1 here to account for the fact that internal calculations are for example from -135° to +135°
   // but actual represntation is from 0° to 269.9° (difference of 0.1°)
   float max_angle_from_esp =
-    static_cast<float>((d_esp.measurement_contour_descritption.stop_index + 1) / 10);
+    (static_cast<float>(d_esp.measurement_contour_descritption.stop_index + 1) / 10);
   float avg_angle = (min_angle_from_esp + max_angle_from_esp) / 2;
 
   // Adjust for example from -135° to +135° to 0° to 270°
