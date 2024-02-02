@@ -161,7 +161,7 @@ You can Rviz to see the the scanner contour. You'll need to select the scanner b
 $ rviz2
 ```
 
-You can view the scan profile by running :   
+You can view the scan profile mounted at a certain height above the floor by running :   
 ```
 $ ros2 launch leuze_description view_rsl400.launch.py
 ```
