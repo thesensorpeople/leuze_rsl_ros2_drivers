@@ -20,7 +20,7 @@
   <!-- Dependencies used when running the code -->
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
-  <!-- <exec_depend>joint_state_publisher_gui</exec_depend> -->
+  <!-- Currently not needed <exec_depend>joint_state_publisher_gui</exec_depend> -->
   <exec_depend>rviz</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>

@@ -5,16 +5,21 @@ This stack contains all packages of the ROS2 driver for the Leuze RSL 400 laser 
 
 ## Installation (from source)
 
-Activate the ROS2 Humble installation with:
+Activate the ROS2 installation with:
 ```
-$ source /opt/ros/humble/setup.bash
+$ source /opt/ros/<distro>/setup.bash
 ```
-Note: You need to repeat this command for each new terminal.
+where `<distro>` is your distribution of ROS *(humble)*.
+You need to repeat this command for each new terminal.
 
-
-Navigate to the src subfolder of your colcon workspace:
+Create a colcon workspace:
 ```
-$ cd ~ros2_ws/src/
+mkdir -p ~/ros2_ws/src
+```
+
+Navigate to the src subfolder of the colcon workspace:
+```
+$ cd ~/ros2_ws/src/
 ```
 
 Copy the complete source code of this driver into the current folder, for example by cloning it from github
@@ -62,15 +67,15 @@ You can activate the simulation mode for testing this driver without any connect
 set(SIMULATION "yes")     #Set to "yes" for simulation mode (default value: "no")
 ```
 
-In RViz, the simulated laser scanner will appear as dynamic sinusoidial contour within the defined topic name:
+In RViz, the simulated laser scanner will appear as a dynamic sinusoidial contour within the defined topic name:
 ![RViz2_RSL400_simulation](leuze_description/doc/RViz2_RSL400_simulation.PNG?raw=true "RViz2_RSL400_simulation")
 
 
 ## Scanner Setup
 
-You can visit [this page](https://www.leuze.com/en/deutschland/produkte/produkte_fuer_die_arbeitssicherheit/optoelektronische_sicherheits_sensoren/sicherheits_laserscanner/rsl_4_5/selector.php?supplier_aid=53800144&grp_id=1411040450707&lang=eng#{%22tab%22:%223%22}) on the Leuze official website to download the *Sensor Studio* software tool and the *Quick Start Guide* document to help setup the communication settings of the scanner. Follow the instructions from the guide until you are successfully connected to the scanner.   
+You can visit [this page](https://www.leuze.com/en/deutschland/produkte/produkte_fuer_die_arbeitssicherheit/optoelektronische_sicherheits_sensoren/sicherheits_laserscanner/rsl_4_5/selector.php?supplier_aid=53800144&grp_id=1411040450707&lang=eng#{%22tab%22:%223%22}) on the Leuze official website to download the *Sensor Studio* software tool and the *Quick Start Guide* document to help setup the communication settings of the scanner. Follow the instructions from the guide until you are successfully connected to the scanner.
 
-Now we need to setup the static IP address of the scanner as well as the receiving device. To do so, go to the *Settings* tab on the top and expand the *Communication* option to the left.   
+Now we need to setup the static IP address of the scanner as well as the receiving device. To do so, go to the *Settings* tab on the top and expand the *Communication* option to the left.
 
 ![Alt text](leuze_description/doc/SensorStudio_IP1.PNG?raw=true "IP Settings")
 
@@ -81,12 +86,12 @@ Next, select the *Data telegrams* option to the left within the same tab. This a
 ![Alt text](leuze_description/doc/SensorStudio_IP2.PNG?raw=true "UDP Settings")
 
 The various settings are :
-* `UDP Telegram` : Ensure this is set to `Active` so we can actually receive data in the driver.   
-* `Destination` : Should be set to `IP address`.   
-* `IP address` : This refers to the IP address of the device receiving the datagrams (i.e. the device running this driver stack). You can set this to any desired value, the default assumed by this stack is `192.168.10.2`.  
-* `Device name` : Enter any name you wish.   
-* `Port` : You can enter any value you wish. The default assumed by this driver stack is `9990`.   
-* `Measurement value transmission` : Ensure set to `Active`.   
+* `UDP Telegram` : Ensure this is set to `Active` so we can actually receive data in the driver.
+* `Destination` : Should be set to `IP address`.
+* `IP address` : This refers to the IP address of the device receiving the datagrams (i.e. the device running this driver stack). You can set this to any desired value, the default assumed by this stack is `192.168.10.2`.
+* `Device name` : Enter any name you wish.
+* `Port` : You can enter any value you wish. The default assumed by this driver stack is `9990`.
+* `Measurement value transmission` : Ensure set to `Active`.
 * `Data type` : This allows you to select between `ID: 6` for Distance only or `ID: 3` for Distance+Signal Strength. Both are supported by this driver.
 * The next 3 fields allow you to setup the scan area and resolution. Once you set these values, make sure to also update them in `leuze_rsl_driver/config/params.yaml` as well (albeit converted to radians). Failing to update the values only shows a warning during execution, but does not impair functionality. The default values can be seen in the image above and the *yaml* file respectively.
 
@@ -104,7 +109,7 @@ This driver stack contains a Phidget driver in order to interface with the I/Os 
 ```
 sudo apt install ros-<distro>-phidgets-ik
 ```
-where `<distro>` is your distribution of ROS *(Kinetic/Melodic)*.   
+where `<distro>` is your distribution of ROS *(humble)*.   
 
 You can make sure you have everything else you need by running the following from your workspace directory:   
 ```
@@ -136,7 +141,7 @@ $ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20
 #### Parameters
 - `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
 - `port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
-- `topic`: The topic name under which the driver appears in the RViz tool 
+- `topic`: The name of a topic the laser scanner should use to publish its measurement data (e.g. "scan1"). The driver appears under this name in the RViz tool.
 
 > For more information on how to setup the IP and Port values of the scanner using Sensor Studio, see section *Scanner Setup*. 
 
@@ -145,13 +150,13 @@ Further parameters are defined in the corresponding .YAML files:
 leuze_bringup/config/params_rsl400.yaml
 
 These additional parameters are:
-    `scan_size`:  Number of beams in a single scann
-    `angle_min`:  Lowest possible angle: -135° (-3*pi/4 rad)
-    `angle_max`:  Highest possible angle: +135° (+3*pi/4 rad)
-    `scan_time`:  Period of the laser scanner
-    `range_min`:  Minumum measurable distance
-    `range_max`:  Maxumum measurable distance
-    `scan_frame`: Laser scan frame ID for further transformations
+- `scan_size`:  Number of beams in a single scann
+- `angle_min`:  Lowest possible angle: -135° (-3*pi/4 rad)
+- `angle_max`:  Highest possible angle: +135° (+3*pi/4 rad)
+- `scan_time`:  Period of the laser scanner
+- `range_min`:  Minumum measurable distance
+- `range_max`:  Maxumum measurable distance
+- `scan_frame`: Laser scan frame ID for further transformations
 
 *Note*
 If you only want RViz to visualize the measured contour without defining any additional transformation, you must set the Fixed_frame property in RViz to the exact name of the Laser scan frame ID (scan_frame) defined above.
@@ -161,9 +166,27 @@ You can Rviz to see the the scanner contour. You'll need to select the scanner b
 $ rviz2
 ```
 
-You can view the scan profile mounted at a certain height above the floor by running :   
+
+## Mount link
+You can view a 3D model of a laser scanner directly in RViz by running the following command:
+   
 ```
 $ ros2 launch leuze_description view_rsl400.launch.py
+```
+
+![RViz_RSL400_mount_link](leuze_description/doc/RViz_RSL400_mount_link.PNG?raw=true "RViz_RSL400_mount_link")
+
+You can choose between two fixed frames:
+- `scanner_laser`: Laser beams will be positioned at height 0.
+- `scanner_mount_link `: Laser beams will be positioned at a certain height as if a real laser scanner were mounted on the floor.
+
+This lauch file has two optional parameters:
+- `use_rviz`: If True, RViz will start automatically (default value: True)
+- `use_sim_time`: If True, the ROS simulation clock will be used instead of real time (default value: False)
+
+For example, use the following command to suppress the automatic lauch of RViz:
+```
+$ ros2 launch leuze_description view_rsl400.launch.py use_rviz:='False'
 ```
 
 
