@@ -151,13 +151,18 @@ int RSL400Interface::parseBuffer(std::basic_string<unsigned char> buffer)
 
   Frame * frame = reinterpret_cast<Frame *>(const_cast<unsigned char *>(buffer.c_str()) );
 
-  // We must extract the lowest 8 bits of the 16-bit ID, becuase the highest 8 bits are reserved
-  uint8_t frame_type_id = static_cast<uint8_t>(frame->id);
+  // To get the scanner type (0 for RSL400, 1 for RSL200) extract the highest 8 bits of
+  // the received frame ID. This is commented out because we do not use automatic device
+  // type detection in this driver:
+  // uint8_t scanner_type = static_cast<uint8_t>(frame->id >> 8);
 
-  if (frame_type_id == 1) {
+  // From now on, we only use the remaining (lowest) 8 bits for frame ID:
+  frame->id = static_cast<uint8_t>(frame->id);
+
+  if (frame->id == 1) {
     // Extended status profile. Status profile + measurement contour descritpion. Pg8 3.3.1.
     parseExtendedStatusProfile(buffer);
-  } else if ( (frame_type_id == 3) || (frame_type_id == 6) ) {
+  } else if ( (frame->id == 3) || (frame->id == 6) ) {
     if (configuration_received_ == false) {
       RCLCPP_INFO(
         get_logger(),
@@ -171,10 +176,10 @@ int RSL400Interface::parseBuffer(std::basic_string<unsigned char> buffer)
         scan_data_[frame->block] = parseScanData(buffer, frame);
       }
     }
-  } else if (frame_type_id == 0) {
-    return frame_type_id;
+  } else if (frame->id == 0) {
+    return frame->id;
   } else {
-    RCLCPP_INFO(get_logger(), "[Laser Scanner] Unknown frame type ID : %d", frame_type_id);
+    RCLCPP_INFO(get_logger(), "[Laser Scanner] Unknown frame type ID : %d", frame->id);
     return -1;
   }
 
@@ -190,7 +195,7 @@ int RSL400Interface::parseBuffer(std::basic_string<unsigned char> buffer)
     resetDefault();
   }
 
-  return frame_type_id;
+  return frame->id;
 }
 
 

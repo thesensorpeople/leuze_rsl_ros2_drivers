@@ -32,6 +32,7 @@ endif()
 
 install(
   DIRECTORY
+    cfg
     launch
     meshes
     urdf
