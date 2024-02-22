@@ -70,7 +70,7 @@ include_directories(include
 
 
 #------------------SIMULATION---------------------------
-set(SIMULATION "yes")     #Set to "yes" for simulation mode
+set(SIMULATION "no")     #Set to "yes" for simulation mode
 
 
 
