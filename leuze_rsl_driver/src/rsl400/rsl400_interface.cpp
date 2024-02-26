@@ -16,9 +16,11 @@ RSL400Interface::RSL400Interface(std::string address, std::string port, std::str
 
   // Get param scan_frame
   this->declare_parameter("scan_frame", rclcpp::PARAMETER_STRING);
-  std::string scan_frame = "scanner_laser";  // Default value
-  if (!this->has_parameter("scan_frame")) {
+  std::string scan_frame;
+  try {
     scan_frame = this->get_parameter("scan_frame").as_string();
+  } catch (const std::exception & e) {
+    scan_frame = "scanner_laser";  // Default value
   }
 
   // Get param ls_debug
