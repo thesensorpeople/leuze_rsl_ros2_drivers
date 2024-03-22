@@ -5,7 +5,7 @@ This stack contains all packages of the ROS2 driver for the Leuze RSL 400 laser 
 ## Installation (from source)
 Activate the ROS2 installation with:
 ```
-$ source /opt/ros/<distro>/setup.bash
+source /opt/ros/<distro>/setup.bash
 ```
 where `<distro>` is your distribution of ROS *(humble)*.
 You need to repeat this command for each new terminal.
@@ -17,17 +17,17 @@ mkdir -p ~/ros2_ws/src
 
 Navigate to the src subfolder of the colcon workspace:
 ```
-$ cd ~/ros2_ws/src/
+cd ~/ros2_ws/src/
 ```
 
 Copy the complete source code of this driver into the current folder, for example by cloning it from github
 ```
-$ git clone https://github.com/thesensorpeople/leuze_rsl_ros2_drivers.git
+git clone https://github.com/thesensorpeople/leuze_rsl_ros2_drivers.git
 ```
 
 Navigate to the main workspace folder:
 ```
-$ cd ..
+cd ..
 ```
 
 Install all ROS2 dependencies with rosdep:
@@ -37,25 +37,25 @@ rosdep install --from-paths src --ignore-src -r -y
 
 Build the driver
 ```
-$ colcon build --symlink-install
+colcon build --symlink-install
 ```
 
 Next, you need to source this workspace so that ROS2 can see the new packages:
 ```
-$ source install/local_setup.bash
+source install/local_setup.bash
 ```
 
 
 Alternatively, you can build only the single packages required by your project, for example:
 ```
-$ colcon build --symlink-install --packages-select leuze_msgs
-$ source install/local_setup.bash
+colcon build --symlink-install --packages-select leuze_msgs
+source install/local_setup.bash
 
-$ colcon build --symlink-install --packages-select leuze_rsl_driver
-$ source install/local_setup.bash
+colcon build --symlink-install --packages-select leuze_rsl_driver
+source install/local_setup.bash
 
-$ colcon build --symlink-install --packages-select leuze_bringup
-$ source install/local_setup.bash
+colcon build --symlink-install --packages-select leuze_bringup
+source install/local_setup.bash
 ```
 
 
@@ -113,15 +113,15 @@ Once the IPs have been setup correctly on the scanner, setting up the receiving 
 ## Bringup
 You can start the Leuze RSL ROS driver for RSL400 by running :
 ```
-$ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
 ```
 
 By using different topic names, you can launch multiple driver instances for multiple connected scanners at a time:
 
 Example:
 ```
-$ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
-$ ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
 ```
 
 
@@ -150,7 +150,7 @@ If you only want RViz to visualize the measured contour without defining any add
 
 You can use Rviz to see the scanner contour. You'll need to select the scanner by its topic (e.g. "/scan") and set the Fixed Frame parameter (default value: "scanner_laser"):   
 ```
-$ rviz2
+rviz2
 ```
 
 
@@ -158,7 +158,7 @@ $ rviz2
 You can view a 3D model of a laser scanner directly in RViz by running the following command:
    
 ```
-$ ros2 launch leuze_description view_rsl400.launch.py
+ros2 launch leuze_description view_rsl400.launch.py
 ```
 
 ![RViz_RSL400_mount_link](leuze_description/doc/RViz_RSL400_mount_link.PNG?raw=true "RViz_RSL400_mount_link")
@@ -173,7 +173,7 @@ This lauch file has two optional parameters:
 
 For example, use the following command to suppress the automatic lauch of RViz:
 ```
-$ ros2 launch leuze_description view_rsl400.launch.py use_rviz:='False'
+ros2 launch leuze_description view_rsl400.launch.py use_rviz:='False'
 ```
 
 
@@ -184,11 +184,15 @@ This driver stack contains a Phidget driver in order to interface with the I/Os 
 ```
 sudo apt install ros-<distro>-phidgets-ik
 ```
-where `<distro>` is your distribution of ROS *(humble)*.   
+where `<distro>` is your distribution of ROS *(humble)*.
 
 You can make sure you have everything else you need by running the following from your workspace directory:   
 ```
 rosdep install --from-paths src --ignore-src -r -y
+```
+Start the Phidget node:
+```
+ros2 run leuze_phidget_driver leuze_phidget_driver_node
 ```
 
 
