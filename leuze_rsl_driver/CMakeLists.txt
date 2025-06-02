@@ -46,7 +46,10 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
 
   # Add test source files
-  ament_add_gtest(${PROJECT_NAME}_test test/test_parse_data.cpp src/rsl400/rsl400_interface.cpp)
+  ament_add_gtest(${PROJECT_NAME}_test
+              test/test_parse_data.cpp
+              src/rsl200_interface.cpp
+              src/rsl400_interface.cpp)
 
   # Add test include directories
   target_include_directories(${PROJECT_NAME}_test PUBLIC
@@ -80,32 +83,56 @@ add_library( rsl400_def_lib INTERFACE )
 
 if(SIMULATION STREQUAL "yes")
   target_compile_definitions(rsl400_def_lib INTERFACE -DRSL400 -DSIMULATION)
-  add_executable(leuze_rsl400_driver src/leuze_rsl_driver.cpp src/rsl400/rsl400_interface.cpp src/udp_sim.cpp)
+  add_executable(leuze_rsl400_driver
+                    src/leuze_rsl_driver.cpp
+                    src/rsl400_interface.cpp
+                    src/udp_sim.cpp)
 else()
   target_compile_definitions( rsl400_def_lib INTERFACE -DRSL400 )
-  add_executable(leuze_rsl400_driver src/leuze_rsl_driver.cpp src/rsl400/rsl400_interface.cpp)
+  add_executable(leuze_rsl400_driver
+                    src/leuze_rsl_driver.cpp
+                    src/rsl400_interface.cpp)
 endif()
 
-ament_target_dependencies(leuze_rsl400_driver rclcpp sensor_msgs leuze_msgs angles)
+ament_target_dependencies(leuze_rsl400_driver
+                  rclcpp
+                  sensor_msgs
+                  leuze_msgs
+                  angles)
 target_link_libraries(leuze_rsl400_driver Boost::thread rsl400_def_lib)
 
 
 
+#------------------RSL200---------------------------
 
-add_executable(
-  node_inheritance
-  src/node_inheritance.cpp
-)
-ament_target_dependencies(
-  node_inheritance
-  rclcpp
-)
+add_library( rsl200_def_lib INTERFACE )
+
+if(SIMULATION STREQUAL "yes")
+  target_compile_definitions(rsl200_def_lib INTERFACE -DRSL200 -DSIMULATION)
+  add_executable(leuze_rsl200_driver
+                    src/leuze_rsl_driver.cpp
+                    src/rsl200_interface.cpp
+                    src/udp_sim.cpp)
+else()
+  target_compile_definitions( rsl200_def_lib INTERFACE -DRSL200 )
+  add_executable(leuze_rsl200_driver
+                    src/leuze_rsl_driver.cpp
+                    src/rsl200_interface.cpp)
+endif()
+
+
+ament_target_dependencies(leuze_rsl200_driver
+                    rclcpp
+                    sensor_msgs
+                    leuze_msgs
+                    angles)
+target_link_libraries(leuze_rsl200_driver Boost::thread rsl200_def_lib)
 
 
 install(
   TARGETS
     leuze_rsl400_driver
-    node_inheritance
+    leuze_rsl200_driver
   DESTINATION
     lib/${PROJECT_NAME}
 )

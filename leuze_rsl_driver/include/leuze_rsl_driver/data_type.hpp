@@ -97,7 +97,52 @@ struct DatagramExtendedStatusProfile_rsl400
 };
 
 
-// Assuming variable length datagrams, length to be determined at runtime
+struct DatagramExtendedStatusProfile_rsl200
+{
+  struct StatusProfile
+  {
+    uint8_t imageType;
+    uint8_t op_mode;
+    uint8_t errorBits;
+    uint8_t detectionStateBits;
+    uint8_t triple_sel;
+    uint8_t aux;
+    uint8_t inputBits;
+    uint8_t outputBits;
+    uint16_t volt;
+    int16_t temp;
+    uint32_t reseved;
+    uint32_t scan_number;
+    uint32_t safe_sig;
+    uint32_t errDw;
+  };
+
+  struct MeasurementContourDescription
+  {
+    uint16_t start_index;
+    uint16_t stop_index;
+    uint16_t index_interval;
+    uint16_t reseved;
+  };
+
+
+  Frame frame;
+  StatusProfile status_profile;
+  MeasurementContourDescription measurement_contour_descritption;
+
+  int getBeamCount()
+  {
+    return 1 + static_cast<int>(ceil(
+             (measurement_contour_descritption.stop_index -
+             measurement_contour_descritption.start_index) /
+             static_cast<double>(measurement_contour_descritption.index_interval))
+    );
+    // As per the formula from UDP spec sheet pg 13 below table 3.4 as well as the expression used
+    // in udpstateimage.h_ex line 102
+  }
+};
+
+// Assuming variable length datagrams, length to be determined runtime
 
 struct DatagramMeasurementDataType
 {

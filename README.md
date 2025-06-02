@@ -1,5 +1,5 @@
 # Leuze ROS2 drivers
-This stack contains all packages of the ROS2 driver for the Leuze RSL 400 laser scanners.
+This stack contains all packages of the ROS2 driver for the Leuze RSL 200 and RSL400 laser scanners.
 
 
 ## Installation (from source)
@@ -111,7 +111,14 @@ Once the IPs have been setup correctly on the scanner, setting up the receiving 
 
 
 ## Bringup
-You can start the Leuze RSL ROS driver for RSL400 by running :
+
+
+You can start the Leuze RSL ROS driver for RSL200 by running:  
+```
+ros2 launch leuze_bringup leuze_bringup_rsl200.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
+```
+
+or (RSL400)
 ```
 ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=<sensor ip> port:=<port> topic:=<topic name>
 ```
@@ -120,21 +127,32 @@ By using different topic names, you can launch multiple driver instances for mul
 
 Example:
 ```
-ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
-ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
+ros2 launch leuze_bringup leuze_bringup_rsl200.launch.py sensor_ip:=192.168.20.5 port:=9991 topic:=scan1
+ros2 launch leuze_bringup leuze_bringup_rsl200.launch.py sensor_ip:=192.168.20.7 port:=9992 topic:=scan2
+ros2 launch leuze_bringup leuze_bringup_rsl400.launch.py sensor_ip:=192.168.20.220 port:=9990 topic:=scan3
 ```
 
 
 #### Parameters
 - `sensor_ip` : The IPv4 address of the laser scanner. This can be configured from the Sensor Studio software tool in Windows. The scanner also displays its currently configured IP during power on startup.   
 - `port`: The port number of the scanner. Can be similarly configured on Sensor Studio, but not displayed on the sensor during startup.
-- `topic`: The name of a topic the laser scanner should use to publish its measurement data (e.g. "scan1"). The driver appears under this name in the RViz tool.
+- `topic`: The name of a topic the laser scanner should use to publish its measurement data (e.g. "scan1"). The driver appears under this name in the RViz tool. Next to this topic, the driver automatically creates an additional topic for the extended status profile with the prefix "status_". For example, you might have the following topics after launching the driver for two different laser scaners:
+```
+/scan1
+/scan2
+/status_scan1
+/status_scan2
+```
 
 > For more information on how to setup the IP and Port values of the scanner using Sensor Studio, see section *Scanner Setup*. 
 
 Further parameters are defined in the corresponding .YAML files:
 
-leuze_bringup/config/params_rsl400.yaml
+**RSL200**
+leuze_bringup/config/params_rsl200.yaml
+
+**RSL400**
+leuze_bringup/config/params_rsl200.yaml
 
 These additional parameters are:
 - `scan_size`:  Number of beams in a single scann
@@ -155,29 +173,35 @@ rviz2
 
 
 ## Mount link
-You can view a 3D model of a laser scanner directly in RViz by running the following command:
-   
+You can view a 3D model of the RSL200 laser scanner directly in RViz by running the following command:
+```
+ros2 launch leuze_description view_rsl200.launch.py
+```
+![RViz_RSL200_mount_link](leuze_description/doc/RViz_RSL200_mount_link.PNG?raw=true "RViz_RSL200_mount_link")
+
+or (RSL400)
 ```
 ros2 launch leuze_description view_rsl400.launch.py
 ```
-
 ![RViz_RSL400_mount_link](leuze_description/doc/RViz_RSL400_mount_link.PNG?raw=true "RViz_RSL400_mount_link")
+
+
 
 You can choose between two fixed frames:
 - `scanner_laser`: Laser beams will be positioned at height 0.
-- `scanner_mount_link `: Laser beams will be positioned at a certain height as if a real laser scanner were mounted on the floor.
+- `scanner_mount_link`: Laser beams will be positioned at a certain height as if a real laser scanner were mounted on the floor.
 
 This lauch file has two optional parameters:
 - `use_rviz`: If True, RViz will start automatically (default value: True)
 - `use_sim_time`: If True, the ROS simulation clock will be used instead of real time (default value: False)
 
-For example, use the following command to suppress the automatic lauch of RViz:
+For example, use the following command to suppress the automatic lauch of RViz for the RSL400 simulation:
 ```
 ros2 launch leuze_description view_rsl400.launch.py use_rviz:='False'
 ```
 
 
-## Phidget driver (obsolete - will be removed in future versions)
+## Phidget driver (obsolete - it will be removed in future versions)
 
 This driver stack contains a Phidget driver in order to interface with the I/Os of the scanner. A required Phidget Interface Kit can be found [here](https://github.com/ros-drivers/phidgets_drivers). If you wish to utilize this feature, either install the Phidget driver from source by cloning it to the same workspace and building it, or install it directly as a Debian binary package:   
 

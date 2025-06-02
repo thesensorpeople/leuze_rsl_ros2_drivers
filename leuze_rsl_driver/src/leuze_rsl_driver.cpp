@@ -4,13 +4,17 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-#include "leuze_rsl_driver/rsl400_interface.hpp"
+#if defined(RSL200)
+  #include "leuze_rsl_driver/rsl200_interface.hpp"
+#elif defined(RSL400)
+  #include "leuze_rsl_driver/rsl400_interface.hpp"
+#endif
 
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 
-  if (argc < 3) {
+  if (argc < 4) {
     std::cerr << "Not enough arguments!" << std::endl;
   }
   std::string address = argv[1];
@@ -21,7 +25,11 @@ int main(int argc, char ** argv)
   std::cout << "port: " << port << std::endl;
   std::cout << "topic: " << topic << std::endl;
 
+  #if defined(RSL200)
+  auto node = std::make_shared<RSL200Interface>(address, port, topic);
+  #elif defined(RSL400)
   auto node = std::make_shared<RSL400Interface>(address, port, topic);
+  #endif
 
   node->connect();
 

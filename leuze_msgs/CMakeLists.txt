@@ -33,6 +33,7 @@ if(BUILD_TESTING)
 endif()
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/ExtendedStatusProfileMsgRsl200.msg"
   "msg/ExtendedStatusProfileMsgRsl400.msg"
   "msg/PhidgetIKInputMsg.msg"
   "msg/PhidgetIKOutputMsg.msg"
