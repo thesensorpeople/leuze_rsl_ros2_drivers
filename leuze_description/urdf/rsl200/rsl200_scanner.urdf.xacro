@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="leuze_rsl_200">
+
+  <xacro:include filename="$(find leuze_description)/urdf/rsl200.urdf.xacro"/>
+
+
+  <!-- Instantiate laser scanner -->
+  <xacro:rsl_200 name="scanner"/>
+
+</robot>
+

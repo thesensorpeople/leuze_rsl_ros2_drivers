@@ -11,7 +11,7 @@ from launch.substitutions import Command, LaunchConfiguration
 def generate_launch_description():
     # Set the paths to required files and folders.
     pkg_path = FindPackageShare(package='leuze_description').find('leuze_description')
-    model_path = os.path.join(pkg_path, 'urdf', 'rsl400_scanner.urdf')
+    model_path = os.path.join(pkg_path, 'urdf', 'rsl400', 'rsl400_scanner.urdf')
     rviz_config_file = os.path.join(pkg_path, "cfg", "display.rviz")
 
     # Get URDF via xacro
